@@ -4,7 +4,7 @@ App Android que consume la [PokeAPI](https://pokeapi.co/) para mostrar un listad
 
 ## Evidencia de funcionamiento
 
-https://github.com/SoftSinaloa/PokeExamen/raw/main/media/demo.mp4
+https://github.com/SoftSinaloa/PokeExamen/raw/master/media/demo.mp4
 
 ## Como correr el proyecto
 
