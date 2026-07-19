@@ -2,6 +2,10 @@
 
 App Android que consume la [PokeAPI](https://pokeapi.co/) para mostrar un listado de Pokemon y ver el detalle de cada uno.
 
+## Evidencia de funcionamiento
+
+https://github.com/SoftSinaloa/PokeExamen/raw/main/media/demo.mp4
+
 ## Como correr el proyecto
 
 1. Clonar el repo
