@@ -4,8 +4,11 @@ import com.luis.pokeexamen.domain.model.Pokemon
 import com.luis.pokeexamen.domain.model.PokemonDetail
 import com.luis.pokeexamen.domain.repository.PokemonRepository
 import com.luis.pokeexamen.domain.usecase.GetPokemonListUseCase
+import com.luis.pokeexamen.domain.usecase.ObserveFavoriteIdsUseCase
+import com.luis.pokeexamen.domain.usecase.ToggleFavoriteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -39,7 +42,7 @@ class PokemonListViewModelTest {
 
     @Test
     fun successLoadPokemonListTest() = runTest {
-        val viewModel = PokemonListViewModel(GetPokemonListUseCase(FakeRepo(Result.success(fakePokemon))))
+        val viewModel = createViewModel(Result.success(fakePokemon))
 
         advanceUntilIdle()
 
@@ -51,7 +54,7 @@ class PokemonListViewModelTest {
 
     @Test
     fun failureLoadPokemonListTest() = runTest {
-        val viewModel = PokemonListViewModel(GetPokemonListUseCase(FakeRepo(Result.failure(Exception("Sin red")))))
+        val viewModel = createViewModel(Result.failure(Exception("Sin red")))
 
         advanceUntilIdle()
 
@@ -62,7 +65,7 @@ class PokemonListViewModelTest {
 
     @Test
     fun successSearchFilterTest() = runTest {
-        val viewModel = PokemonListViewModel(GetPokemonListUseCase(FakeRepo(Result.success(fakePokemon))))
+        val viewModel = createViewModel(Result.success(fakePokemon))
 
         advanceUntilIdle()
         viewModel.onSearchQuery("char")
@@ -74,13 +77,22 @@ class PokemonListViewModelTest {
 
     @Test
     fun successClearSearchTest() = runTest {
-        val viewModel = PokemonListViewModel(GetPokemonListUseCase(FakeRepo(Result.success(fakePokemon))))
+        val viewModel = createViewModel(Result.success(fakePokemon))
 
         advanceUntilIdle()
         viewModel.onSearchQuery("char")
         viewModel.onSearchQuery("")
 
         Assert.assertEquals("Full list after clear", fakePokemon, viewModel.state.value.displayPokemon)
+    }
+
+    private fun createViewModel(result: Result<List<Pokemon>>): PokemonListViewModel {
+        val repo = FakeRepo(result)
+        return PokemonListViewModel(
+            getPokemonList = GetPokemonListUseCase(repo),
+            observeFavoriteIds = ObserveFavoriteIdsUseCase(repo),
+            toggleFavoriteUseCase = ToggleFavoriteUseCase(repo)
+        )
     }
 }
 
@@ -89,4 +101,7 @@ private class FakeRepo(
 ) : PokemonRepository {
     override suspend fun getPokemonList(offset: Int) = result
     override suspend fun getPokemonDetail(name: String) = Result.failure<PokemonDetail>(Exception())
+    override suspend fun getFavoriteIds(): Set<Int> = emptySet()
+    override fun observeFavoriteIds() = flowOf(emptySet<Int>())
+    override suspend fun toggleFavorite(pokemonId: Int) = Unit
 }

@@ -3,6 +3,7 @@ package com.luis.pokeexamen.domain.usecase
 import com.luis.pokeexamen.domain.model.Pokemon
 import com.luis.pokeexamen.domain.model.PokemonDetail
 import com.luis.pokeexamen.domain.repository.PokemonRepository
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Test
@@ -47,6 +48,9 @@ class GetPokemonListUseCaseTest {
                 return Result.success(emptyList())
             }
             override suspend fun getPokemonDetail(name: String) = Result.failure<PokemonDetail>(Exception())
+            override suspend fun getFavoriteIds(): Set<Int> = emptySet()
+            override fun observeFavoriteIds() = flowOf(emptySet<Int>())
+            override suspend fun toggleFavorite(pokemonId: Int) = Unit
         }
         val useCase = GetPokemonListUseCase(repo)
 
@@ -63,4 +67,7 @@ internal class FakeRepository(
 ) : PokemonRepository {
     override suspend fun getPokemonList(offset: Int) = listResult
     override suspend fun getPokemonDetail(name: String) = detailResult
+    override suspend fun getFavoriteIds(): Set<Int> = emptySet()
+    override fun observeFavoriteIds() = flowOf(emptySet<Int>())
+    override suspend fun toggleFavorite(pokemonId: Int) = Unit
 }

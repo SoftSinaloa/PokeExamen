@@ -5,7 +5,7 @@ App Android que consume la [PokeAPI](https://pokeapi.co/) para mostrar un listad
 ## Como correr el proyecto
 
 1. Clonar el repo
-2. Abrir con Android Studio (Koala o superior)
+2. Abrir con Android Studio Hedgehog 2023.1 o superior
 3. Sincronizar Gradle y correr en emulador o dispositivo con Android 7.0+
 
 La primera vez descarga los datos de la API, despues funciona sin conexion gracias al cache en Room.
@@ -71,7 +71,7 @@ Cache-first: primero se busca en Room y solo se va a red si no hay datos. Al pag
 | Gson | Serializar respuestas y TypeConverters de Room |
 | Koin | Inyeccion de dependencias |
 | Coil | Carga de imagenes |
-| Room 2.7 | Persistencia local |
+| Room 2.6.1 | Persistencia local |
 | Navigation Compose | Navegacion entre pantallas |
 | Lottie | Animacion pokeball en splash y loaders |
 | Material Icons Extended | Iconos del bottom nav y cards |
